@@ -334,7 +334,7 @@ for(var i=1;i<=5;i++)
   makeAPI(`week${i}`,'in'), 
   makeAPI(`week${i}`,'out');
   
-/// HANDLE ADD REQUEST ///
+/// HANDLE ADD REQUEST /// 
 app.use(bodyParser.json());
 
 app.post('/api/add',(req,res) => {
