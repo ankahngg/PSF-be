@@ -143,6 +143,10 @@ app.post('/api/remove',(req,res) => {
 
 /// START LAB ///
   
+
+app.get('/testserver',(req,res) => {
+  res.send("test server is working");
+})
 /// END LAB ///
 
 app.listen(port, () => console.log('success'))
