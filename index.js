@@ -19,6 +19,7 @@ app.use(cors());
 const port = 4000;
 let q = '';
 let tbn = '';
+let sleepTime = 100;
 
 // START FUNCTION //
 
@@ -30,6 +31,7 @@ function sleep(ms) {
 
 function makeAPI_months_data () {
   app.get(`/api/months_data`,(req,res) => {
+    console.log('re-render')
     getId('months')
       .then((id) => {
         q = `SELECT * FROM months_data WHERE ID=${id};`
@@ -78,20 +80,17 @@ function makeAPI(range,kind) {
 /// END FUNCTION ///
 
 /// START INITIAL DATABASES ///
+async function init() {
+  await createMainsTable();
+  await initialInsert1();
+  await initialInsert2();
+  const id = await getId('months');
 
-createMainsTable()
-  .then(() => {return initialInsert1();})
-  .then(() => {return initialInsert2();})
-  .then(() => {return getId('months');})
-  // CREATE TABLES
-  .then((id) => {
-    create('month',id);
-    for(var i=1;i<=5;i++) create(`week${i}`,id);
-    return id;
-  })
-  .catch((res) => {
-    console.log("Sao ma loi duoc ?")
-  })
+  create('month',id);
+  for(var i=1;i<=5;i++) create(`week${i}`,id);
+}
+
+init();
 
 /// END INITIAL DATABASES ///
 
@@ -107,46 +106,64 @@ for(var i=1;i<=5;i++)
 /// HANDLE ADD REQUEST /// 
 app.use(bodyParser.json());
 
-app.post('/api/add',(req,res) => {
+app.post('/api/add',async (req,res) => {
   const data = req;
   const dt = data.body;
   
-  // CHECK EXIST
+  await add(dt);
+  await update(dt.id,dt.kind);
   
-  add(dt)
-    .then (() => {
-      update(dt.id,dt.kind);
-      return sleep(100);
-    })
-    .then(() => {
-      res.send('User created successfully!');
-    })
+  await sleep(sleepTime);
+    
+  res.send('User created successfully!');
+    
 })
 
 /// HANDLE REMOVE REQUEST ///
 
-app.post('/api/remove',(req,res) => {
+app.post('/api/remove',async (req,res) => {
   const data = req;
   const dt = data.body;
   
   // CHECK EXIST
   
-  remove(dt)
-    .then ((th) => {
-      update(th,dt.KIND);
-      return sleep(100);
-    })
-    .then(() => {
-      res.send('User created successfully!');
-    })
+  const th = await remove(dt);
+
+  await update(th,dt.KIND);
+
+  await sleep(sleepTime);
+    
+  res.send('User created successfully!');
 })
 
 /// START LAB ///
-  
 
-app.get('/testserver',(req,res) => {
-  res.send("test server is working");
-})
+// function delay(ms) {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// }
+  
+// async function test(wait) {
+//   if(wait) await delay(2000);
+//   return new Promise(resolve => resolve('here'));
+// }
+
+// test(false)
+//   .then((res) => {
+//     console.log(res);
+//   })
+
+// function cout(mess) {
+//   console.log(mess);
+//   }
+// const lg = 'dcm'
+// cout(`message is ${lg}`);
+
+
+
+// app.get('/testserver',(req,res) => {
+//   console.log('re-render');
+//   res.send("test server is working");
+// })
 /// END LAB ///
 
 app.listen(port, () => console.log('success'))

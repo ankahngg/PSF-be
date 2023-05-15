@@ -1,30 +1,22 @@
 const getQuerry = require('../Components/getQuerry');
 const getId = require('../Components/getId');
 
-function initialInsert2() {
-    return new Promise((resolve,reject) => {
-  
-      getId('months')
-        .then(id => {
-          q = `SELECT * FROM months_data
-            WHERE months_data.ID = ${id};
-          `
-          
-          getQuerry(q)
-            .then(res => {
-              if(!res.length) {
-                q = `INSERT INTO months_data
-                VALUES (${id},0,0,0,0,0,0,0,0,0,0,0,0);
-                `
-                return getQuerry(q);
-              }
-            })
-            .then(() => resolve())
-            // .catch(() => reject())
-  
-        })
-      
-    })
+async function initialInsert2() {
+  const id = await getId('months')
+
+  q = `SELECT * FROM months_data
+    WHERE months_data.ID = ${id};
+  `
+  const res = await getQuerry(q);
+        
+  if(!res.length) {
+    q = `INSERT INTO months_data
+    VALUES (${id},0,0,0,0,0,0,0,0,0,0,0,0);
+    `
+    await getQuerry(q);
   }
+    
+  return new Promise(resolve => resolve());
+}
 
 module.exports = initialInsert2;

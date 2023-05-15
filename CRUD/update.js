@@ -1,52 +1,38 @@
+const { promise } = require('../Components/connectDB');
 const getId = require('../Components/getId');
 const getQuerry = require('../Components/getQuerry');
 
-function update(th,kind) {
-    return new Promise((resolve,reject) => {
-      getId('months')
-        .then((id) => {
-          tbn = `week${th}_${id}`;
-          q = `SELECT SUM(MONEY) FROM ${tbn}
-                WHERE ${tbn}.KIND = '${kind}';
-          `
-          getQuerry(q)
-            .then((res) => {
-              const colname = `WEEK${th}_${kind}`;
-              let sum = res[0]['SUM(MONEY)'];
-              if(sum == null) sum = 0;
-              
-             
-              q = `
-                UPDATE months_data
-                SET ${colname} = ${sum}
-                WHERE ID = ${id};
-              `
-              return getQuerry(q);
-            })
-            .then(() => resolve())
-        })
-    
-        getId('months')
-          .then((id) => {
-            tbn = `month_${id}`;
-            q = `SELECT SUM(MONEY) FROM ${tbn}
-                  WHERE ${tbn}.KIND = '${kind}';
-            `
-            getQuerry(q)
-              .then((res) => {
-                const colname = `MONTH_${kind}`;
-                let sum = res[0]['SUM(MONEY)'];
-                if(sum == null) sum = 0;
-                q = `
-                  UPDATE months_data
-                  SET ${colname} = ${sum}
-                  WHERE ID = ${id};
-                `
-                return getQuerry(q);
-              })
-              .then(() => resolve())
-          })
+// call sum from $tbn to update into $colname in months_data table with $kind
+async function updsum(tbn,colname,kind,id) {
+  q = `SELECT SUM(MONEY) FROM ${tbn}
+        WHERE ${tbn}.KIND = '${kind}';
+  `;
+  const res = await getQuerry(q);
+
+  let sum = res[0]['SUM(MONEY)'];
+  if(sum == null) sum = 0;
+
+  q = `
+        UPDATE months_data
+        SET ${colname} = ${sum}
+        WHERE ID = ${id};
+      `
+  await getQuerry(q);
+
+  return new Promise(resolve => resolve());
+}
+
+async function update(th,kind) {
+  const id = await getId('months');
   
-    })
-  }
-  module.exports = update;
+  tbn = `week${th}_${id}`;
+  const colname = `WEEK${th}_${kind}`;
+  
+  await promise.call([
+    updsum(`week${th}_${id}`,`WEEK${th}_${kind}`,kind,id),
+    updsum(`month_${id}`,`MONTH_${kind}`,kind,id)
+  ])
+  
+  return new Promise(resolve => resolve());
+}
+module.exports = update;
