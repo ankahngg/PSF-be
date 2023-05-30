@@ -26,7 +26,7 @@ async function remove(dt) {
     getQuerry(q2)
   ]);
 
-  return new Promise(resolve => resolve(th));
+  return th;
 }
 
 module.exports = remove;

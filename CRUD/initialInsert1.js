@@ -7,7 +7,7 @@ async function initialInsert1() {
 
   q = `SELECT * FROM months
        WHERE (months.MONTH = ${month} AND months.YEAR = ${year});`
-  const res = getQuerry(q);
+  const res = await getQuerry(q);
 
   if(!res.length) {
     q = `
@@ -16,7 +16,6 @@ async function initialInsert1() {
     await getQuerry(q);
   }
   
-  return new Promise(resolve => resolve());
 }
 
 module.exports = initialInsert1;

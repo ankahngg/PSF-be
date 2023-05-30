@@ -19,7 +19,6 @@ async function updsum(tbn,colname,kind,id) {
       `
   await getQuerry(q);
 
-  return new Promise(resolve => resolve());
 }
 
 async function update(th,kind) {
@@ -33,6 +32,5 @@ async function update(th,kind) {
     updsum(`month_${id}`,`MONTH_${kind}`,kind,id)
   ])
   
-  return new Promise(resolve => resolve());
 }
 module.exports = update;

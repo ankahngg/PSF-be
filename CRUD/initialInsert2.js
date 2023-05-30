@@ -16,7 +16,6 @@ async function initialInsert2() {
     await getQuerry(q);
   }
     
-  return new Promise(resolve => resolve());
 }
 
 module.exports = initialInsert2;

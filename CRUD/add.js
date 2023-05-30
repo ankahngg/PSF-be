@@ -21,8 +21,6 @@ async function add(dt) {
   
   await getQuerry(q);
 
-  return new Promise(resolve => resolve())
-  
 }
 
 module.exports = add;

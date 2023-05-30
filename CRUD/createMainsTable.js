@@ -1,6 +1,16 @@
 const getQuerry = require('../Components/getQuerry');
 
 async function createMainsTable() {
+  q = `
+    CREATE TABLE IF NOT EXISTS account (
+      ID INT AUTO_INCREMENT,
+      USERNAME varchar(255),
+      PASSWORD varchar(255),
+      PRIMARY KEY (ID)
+    );
+  `;
+  await getQuerry(q);
+
   q = `CREATE TABLE IF NOT EXISTS months_data (
     ID INT,
     MONTH_IN INT,
@@ -27,7 +37,6 @@ async function createMainsTable() {
 
   await getQuerry(q)
 
-  return new Promise(resolve => resolve())
   }
 
 module.exports = createMainsTable;
