@@ -1,4 +1,5 @@
 const getQuerry = require("../Components/getQuerry");
+const getMonthId = require("../Components/getMonthId");
 
 function create(range,userid,monthid) {
     q = `CREATE TABLE IF NOT EXISTS ${userid}_${range}_${monthid} (
