@@ -1,36 +1,50 @@
 const express = require('express');
 const getId = require('../Components/getId');
 const getQuerry = require('../Components/getQuerry');
+const getMonthId = require('../Components/getMonthId');
+const getUserId = require('../Components/getUserId');
+
 const router = express.Router();
 
 
-async function makeAPI_months_data () {
   
-  router.get(`/months_data`,async (req,res) => {
-      let q,tbn,kq,id;  
-      id = await getId('months');
-      q = `SELECT * FROM months_data WHERE ID=${id};`
+router.get(`/monthsdata`,async (req,res) => {
+    const id = req.query.id;
+    const year = req.query.year;
+    const month = req.query.month;
+    userid = await getUserId(id);
+
+    let q,tbn,kq;
+
+    const monthid = await getMonthId(userid,month,year);
+    if(monthid == -1) res.json("khong co du lieu");
+    else {
+      q = `SELECT * FROM ${userid}_monthsdata WHERE ID=${monthid};`
       kq = await getQuerry(q);
       res.json(kq);
-    })
-}
-  
-async function makeAPI(range,kind) {
-  router.get(`/${range}_${kind}`,async (req,res) => {
-      let q,tbn,kq,id;  
-      id = await getId('months');
-      q = `SELECT * FROM ${range}_${id} WHERE KIND = '${kind}';`;
-      kq = await getQuerry(q);
-      res.json(kq)
-    })
-}
+    }
+  })
 
-makeAPI_months_data();
-makeAPI('month','in');
-makeAPI('month','out');
-for(var i=1;i<=5;i++) 
-  makeAPI(`week${i}`,'in'), 
-  makeAPI(`week${i}`,'out');
+  
+
+router.get(`/`,async (req,res) => {
+    const id = req.query.id;
+    const year = req.query.year;
+    const month = req.query.month;
+    const range = req.query.range;
+    const kind = req.query.kind;
+
+    const userid = await getUserId(id);
+
+    let q,tbn,kq;  
+    const monthid = await getMonthId(userid,month,year);
+    if(monthid == -1) res.json("khong co du lieu");
+    else {
+        q = `SELECT * FROM ${userid}_${range}_${monthid} WHERE KIND = '${kind}';`;
+        kq = await getQuerry(q);
+        res.json(kq);
+    }
+  })
 
 
 module.exports = router;

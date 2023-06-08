@@ -1,36 +1,59 @@
-const { promise } = require('../Components/connectDB');
-const getId = require('../Components/getId');
+const getUserId = require('../Components/getUserId');
+const getMonthId = require('../Components/getMonthId');
 const getQuerry = require('../Components/getQuerry');
 
-// call sum from $tbn to update into $colname in months_data table with $kind
-async function updsum(tbn,colname,kind,id) {
-  q = `SELECT SUM(MONEY) FROM ${tbn}
-        WHERE ${tbn}.KIND = '${kind}';
+async function getsum(tbn,dt) {
+ 
+  q = `SELECT SUM(MONEY) as sum FROM ${tbn}
+        WHERE ${tbn}.KIND = '${dt.kind}';
   `;
-  const res = await getQuerry(q);
+  res = await getQuerry(q);
 
-  let sum = res[0]['SUM(MONEY)'];
-  if(sum == null) sum = 0;
-
-  q = `
-        UPDATE months_data
-        SET ${colname} = ${sum}
-        WHERE ID = ${id};
-      `
-  await getQuerry(q);
-
+  sum = res[0]['sum'];
+  if(sum == null) return 0;
+  else return sum;
 }
 
-async function update(th,kind) {
-  const id = await getId('months');
-  
-  tbn = `week${th}_${id}`;
-  const colname = `WEEK${th}_${kind}`;
-  
-  await promise.call([
-    updsum(`week${th}_${id}`,`WEEK${th}_${kind}`,kind,id),
-    updsum(`month_${id}`,`MONTH_${kind}`,kind,id)
-  ])
+async function updatesum(tbn,colname,sum,monthid) {
+  q = `
+        UPDATE ${tbn}
+        SET ${colname} = ${sum}
+        WHERE ID = ${monthid};
+      `
+  await getQuerry(q);
+}
+
+// const dt = {
+//   year 
+//   month 
+//   week 
+//  range
+//   id 
+//   date
+//   kind 
+//   MoneyInput 
+//   NoteInput
+// }
+
+async function update(dt) {
+  const userid = await getUserId(dt.id);
+  const monthid = await getMonthId(userid,dt.month,dt.year);
+
+  tbn = `${userid}_month_${monthid}`;
+  sum = await getsum(tbn,dt);
+
+  tbn = `${userid}_monthsdata`
+  colname = `MONTH_${dt.kind}`
+  await updatesum(tbn,colname,sum,monthid);
+
+  ////////
+
+  tbn = `${userid}_${dt.range}_${monthid}`;
+  sum = await getsum(tbn,dt);
+
+  tbn = `${userid}_monthsdata`
+  colname = `${dt.range}_${dt.kind}`
+  await updatesum(tbn,colname,sum,monthid); 
   
 }
 module.exports = update;

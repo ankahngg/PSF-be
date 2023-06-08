@@ -2,6 +2,9 @@ const express = require('express');
 const add = require('../CRUD/add');
 const remove = require('../CRUD/remove');
 const update = require('../CRUD/update');
+const createMainsTable = require('../CRUD/createMainsTable')
+const addUser = require('../CRUD/addUser')
+
 const router = express.Router();
 
 const bodyParser = require('body-parser');
@@ -20,9 +23,6 @@ router.post('/add',async (req,res) => {
     const dt = data.body;
     
     await add(dt);
-    await update(dt.id,dt.kind);
-    
-    await sleep(sleepTime);
       
     res.send('User created successfully!');
       
@@ -32,13 +32,19 @@ router.post('/remove',async (req,res) => {
     const data = req;
     const dt = data.body;
     
-    const th = await remove(dt);
-  
-    await update(th,dt.KIND);
-  
-    await sleep(sleepTime);
+    await remove(dt);
       
     res.send('User created successfully!');
   })
+
+router.post('/initialCreate', async (req,res) => {
+  const data = req;
+  const user = data.body;
+
+  await addUser(user);
+
+  res.send("OK");
+
+})
 
 module.exports = router;

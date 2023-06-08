@@ -1,13 +1,14 @@
 const getQuerry = require('./getQuerry.js');
+const getUserId = require('./getUserId')
+const getId = require('./getId');
+
 
 async function lab() {
-    let q,tbn,res;
-    
-    q = `SELECT * FROM account WHERE EMAIL = 'khang@gmail.co';`
-    
+    q = `SELECT COUNT(ID) AS sl FROM 1_month_1;`
     res = await getQuerry(q);
-
-    console.log(res);
+  
+    const id = res[0]['sl'];
+    console.log(id);
 }
 
 module.exports = lab;
