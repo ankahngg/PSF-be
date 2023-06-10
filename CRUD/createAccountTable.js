@@ -1,6 +1,6 @@
 const getQuerry = require("../Components/getQuerry");
 
-function createAccountTable() {
+async function createAccountTable() {
     let q,tbn,res;
 
     q = `CREATE TABLE IF NOT EXISTS account(
@@ -11,7 +11,7 @@ function createAccountTable() {
         PRIMARY KEY (ID)
     );`
 
-    getQuerry(q);
+    await getQuerry(q);
     return;
 }
 
