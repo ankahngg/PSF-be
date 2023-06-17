@@ -43,14 +43,12 @@ async function add(dt) {
   dt.range = `week${th}`;
   
   tbn = `${userid}_month_${monthid}`
-  q = `INSERT INTO ${tbn} (DATE, MONEY, KIND, NOTE)
-      VALUES('${dt.date}',${dt.MoneyInput},'${dt.kind}','${dt.NoteInput}');`
+  q = `INSERT INTO ${tbn} (ID, DATE, MONEY, KIND, NOTE)
+      VALUES('${dt.noteId}','${dt.date}',${dt.MoneyInput},'${dt.kind}','${dt.NoteInput}');`
   await getQuerry(q);
 
-  const id = await getId(tbn);
-
   q = `INSERT INTO ${userid}_${dt.range}_${monthid} (ID, DATE, MONEY, KIND, NOTE)
-    VALUES(${id},'${dt.date}',${dt.MoneyInput},'${dt.kind}','${dt.NoteInput}');` 
+    VALUES(${dt.noteId},'${dt.date}',${dt.MoneyInput},'${dt.kind}','${dt.NoteInput}');` 
     
   await getQuerry(q);
 
@@ -70,6 +68,7 @@ async function add(dt) {
   colname = `${dt.range}_${dt.kind}`
   await updatesum(tbn,colname,sum,monthid); 
 
+  
 }
 
 module.exports = add;

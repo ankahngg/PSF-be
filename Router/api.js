@@ -28,19 +28,19 @@ router.get(`/monthsdata`,async (req,res) => {
   
 
 router.get(`/`,async (req,res) => {
+ 
     const id = req.query.id;
     const year = req.query.year;
     const month = req.query.month;
-    const range = req.query.range;
-    const kind = req.query.kind;
+    // const range = req.query.range;
+    // const kind = req.query.kind;
 
     const userid = await getUserId(id);
-
     let q,tbn,kq;  
     const monthid = await getMonthId(userid,month,year);
     if(monthid == -1) res.json("khong co du lieu");
     else {
-        q = `SELECT * FROM ${userid}_${range}_${monthid} WHERE KIND = '${kind}';`;
+        q = `SELECT * FROM ${userid}_month_${monthid};`;
         kq = await getQuerry(q);
         res.json(kq);
     }

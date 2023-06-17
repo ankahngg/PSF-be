@@ -8,7 +8,7 @@ async function lab() {
     res = await getQuerry(q);
   
     const id = res[0]['sl'];
-    console.log(id);
+    
 }
 
 module.exports = lab;

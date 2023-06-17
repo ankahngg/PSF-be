@@ -10,7 +10,7 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 router.use(bodyParser.json());
 
-let sleepTime = 100;
+let sleepTime = 2000;
 
 function sleep(ms) {
   return new Promise((resolve,reject) => {
@@ -23,7 +23,8 @@ router.post('/add',async (req,res) => {
     const dt = data.body;
     
     await add(dt);
-      
+    await sleep(sleepTime);
+    
     res.send('User created successfully!');
       
 })
@@ -34,6 +35,7 @@ router.post('/remove',async (req,res) => {
     
     await remove(dt);
       
+    await sleep(sleepTime);
     res.send('User created successfully!');
   })
 
