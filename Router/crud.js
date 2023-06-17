@@ -23,7 +23,7 @@ router.post('/add',async (req,res) => {
     const dt = data.body;
     
     await add(dt);
-    await sleep(sleepTime);
+    //await sleep(sleepTime);
     
     res.send('User created successfully!');
       
@@ -35,7 +35,7 @@ router.post('/remove',async (req,res) => {
     
     await remove(dt);
       
-    await sleep(sleepTime);
+    //await sleep(sleepTime);
     res.send('User created successfully!');
   })
 
