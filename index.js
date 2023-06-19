@@ -8,8 +8,6 @@ const apiRouter = require('./Router/api');
 const createAccountTable = require('./CRUD/createAccountTable');
 const lab = require('./Components/lab');
 
-
-
 const app = express();
 app.use(cors());
 const port = 4000;

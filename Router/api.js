@@ -46,5 +46,10 @@ router.get(`/`,async (req,res) => {
     }
   })
 
+  router.get(`/test`,async (req,res) => {
+    res.send(`<h1>cung ra gi day</h1>`)
+    
+  })
+
 
 module.exports = router;
