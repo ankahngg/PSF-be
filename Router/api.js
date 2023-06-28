@@ -43,7 +43,7 @@ router.get(`/`,async (req,res) => {
     const monthid = await getMonthId(userid,month,year);
     if(monthid == -1) res.json("khong co du lieu");
     else {
-      await sleep(100);
+      //await sleep(100);
         q = `SELECT * FROM ${userid}_month_${monthid};`;
         kq = await getQuerry(q);
         res.json(kq);
