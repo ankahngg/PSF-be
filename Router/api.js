@@ -7,7 +7,6 @@ const getUserId = require('../Components/getUserId');
 const router = express.Router();
 
 
-  
 router.get(`/monthsdata`,async (req,res) => {
     const id = req.query.id;
     const year = req.query.year;
@@ -25,7 +24,11 @@ router.get(`/monthsdata`,async (req,res) => {
     }
   })
 
-  
+function sleep(ms) {
+  return new Promise((resolve,reject) => {
+    setTimeout(() => resolve(10),ms);
+  })      
+}  
 
 router.get(`/`,async (req,res) => {
  
@@ -40,10 +43,13 @@ router.get(`/`,async (req,res) => {
     const monthid = await getMonthId(userid,month,year);
     if(monthid == -1) res.json("khong co du lieu");
     else {
+      await sleep(100);
         q = `SELECT * FROM ${userid}_month_${monthid};`;
         kq = await getQuerry(q);
         res.json(kq);
     }
+    
+
   })
 
   router.get(`/test`,async (req,res) => {

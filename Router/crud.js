@@ -35,7 +35,7 @@ router.post('/remove',async (req,res) => {
     
     await remove(dt);
       
-    //await sleep(sleepTime);
+    //await sleep(1000);
     res.send('User created successfully!');
   })
 
