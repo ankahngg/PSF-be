@@ -39,15 +39,20 @@ router.get(`/`,async (req,res) => {
     // const kind = req.query.kind;
 
     const userid = await getUserId(id);
-    let q,tbn,kq;  
-    const monthid = await getMonthId(userid,month,year);
-    if(monthid == -1) res.json("khong co du lieu");
+    if(userid == -1) res.json("hack cc");
     else {
-      //await sleep(100);
-        q = `SELECT * FROM ${userid}_month_${monthid};`;
-        kq = await getQuerry(q);
-        res.json(kq);
+      let q,tbn,kq;  
+      const monthid = await getMonthId(userid,month,year);
+      if(monthid == -1) res.json("khong co du lieu");
+      else {
+        //await sleep(100);
+          q = `SELECT * FROM ${userid}_month_${monthid};`;
+          kq = await getQuerry(q);
+          res.json(kq);
+      }
     }
+
+    
     
 
   })
